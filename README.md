@@ -17,4 +17,4 @@ A simple implementation of the Connect-4 game in Python. Play against the comput
    cd connect-four
 
 ## Notes
- - Collum numbers begin with 0 and end with 6
+ - Column numbers begin with 0 and end with 6
