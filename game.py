@@ -46,25 +46,21 @@ def pickPos(col_picked, player):
     printBoard()
 
 def checkWinner(state):
-    # Check horizontal
     for i in range(6):
         for j in range(4):
             if state[i][j] != "⚫" and state[i][j] == state[i][j+1] == state[i][j+2] == state[i][j+3]:
                 return True
 
-    # Check vertical
     for i in range(3):
         for j in range(7):
             if state[i][j] != "⚫" and state[i][j] == state[i+1][j] == state[i+2][j] == state[i+3][j]:
                 return True
 
-    # Check diagonal (up-right)
     for i in range(3):
         for j in range(4):
             if state[i][j] != "⚫" and state[i][j] == state[i+1][j+1] == state[i+2][j+2] == state[i+3][j+3]:
                 return True
 
-    # Check diagonal (up-left)
     for i in range(3):
         for j in range(3, 7):
             if state[i][j] != "⚫" and state[i][j] == state[i+1][j-1] == state[i+2][j-2] == state[i+3][j-3]:
@@ -73,58 +69,46 @@ def checkWinner(state):
     return False
 
 def evaluate(state):
-    # Evaluate the current game state for the computer
-    # Assign positive scores for favorable states and negative scores for unfavorable states
-
-    # Check for winning positions
     if checkWinner(state):
-        if p2 in state[2][2]:  # If the computer wins, assign a high score
+        if p2 in state[2][2]: 
             return 1000
-        elif p1 in state[2][2]:  # If the player wins, assign a low score
+        elif p1 in state[2][2]: 
             return -1000
-
-    # Evaluate based on the number of connected pieces
+                
     computer_score = 0
     player_score = 0
 
-    # Check horizontally
     for row in state:
         for i in range(4):
             window = row[i:i + 4]
             computer_score += window.count(p2)
             player_score += window.count(p1)
 
-    # Check vertically
     for col in range(7):
         for i in range(3):
             window = [state[i][col], state[i + 1][col], state[i + 2][col], state[i + 3][col]]
             computer_score += window.count(p2)
             player_score += window.count(p1)
 
-    # Check diagonally (up-right)
     for i in range(3):
         for j in range(4):
             window = [state[i][j], state[i + 1][j + 1], state[i + 2][j + 2], state[i + 3][j + 3]]
             computer_score += window.count(p2)
             player_score += window.count(p1)
 
-    # Check diagonally (up-left)
     for i in range(3):
         for j in range(3, 7):
             window = [state[i][j], state[i + 1][j - 1], state[i + 2][j - 2], state[i + 3][j - 3]]
             computer_score += window.count(p2)
             player_score += window.count(p1)
 
-    # Score difference
     return computer_score - player_score  
 
 def minimax(state, depth, maximizing_player, alpha, beta):
     if depth == 0 or checkWinner(state):
         if maximizing_player:
-            # Evaluate game state for computer
             return evaluate(state)  
         else:
-            # Evaluate game state for player
             return -evaluate(state)  
 
     valid_moves = [col for col in range(7) if state[0][col] == "⚫"]
@@ -132,7 +116,6 @@ def minimax(state, depth, maximizing_player, alpha, beta):
     if maximizing_player:
         max_eval = float("-inf")
         for col in valid_moves:
-            # Simulate the move
             new_state = makeMove(state, col, p2)  
             eval = minimax(new_state, depth - 1, False, alpha, beta)
             max_eval = max(max_eval, eval)
@@ -143,16 +126,15 @@ def minimax(state, depth, maximizing_player, alpha, beta):
     else:
         min_eval = float("inf")
         for col in valid_moves:
-            new_state = makeMove(state, col, p1)  # Simulate the move
+            new_state = makeMove(state, col, p1) 
             eval = minimax(new_state, depth - 1, True, alpha, beta)
             min_eval = min(min_eval, eval)
             beta = min(beta, eval)
             if beta <= alpha:
-                break  # Alpha-Beta pruning
+                break  
         return min_eval
 
 def makeMove(state, col, player):
-    # Create a new state with the given move
     new_state = [row[:] for row in state]
     row = 0
     while row < 6 and new_state[row][col] == "⚫":
@@ -163,42 +145,34 @@ def makeMove(state, col, player):
 def computerMove():
     valid_moves = [col for col in range(7) if grid[0][col] == "⚫"]
     if valid_moves:
-        # Block winning player moves
         for col in valid_moves:
-            # Check horizontally
             new_state = makeMove(grid, col, p1)
             if checkWinner(new_state):
                 pickPos(col, p2)  
                 return
 
-            # Check vertically
             new_state = makeMove(grid, col, p1)
             if checkWinner(new_state):
                 pickPos(col, p2) 
                 return
 
-            # Check diagonally (left to right)
             new_state = makeMove(grid, col, p1)
             if checkWinner(new_state):
                 pickPos(col, p2)  
                 return
 
-            # Check diagonally (right to left)
             new_state = makeMove(grid, col, p1)
             if checkWinner(new_state):
                 pickPos(col, p2) 
                 return
 
         for col in valid_moves:
-            # Simulate move
             new_state = makeMove(grid, col, p2)
             
-            # Check if can win with this move
             if checkWinner(new_state):
-                pickPos(col, p2)  # Make a winning move if available
+                pickPos(col, p2) 
                 return
 
-        # If neither player can win immediately or be blocked, pick a move based on minimax
         best_move = None
         best_score = float("-inf")
         for col in valid_moves:
@@ -226,11 +200,11 @@ printBoard()
 while play:
     if turn:
         player = player2
-        computerMove()  # Computer's turn
+        computerMove() 
     else:
         player = player1
         pos = int(input("Pick a column > "))
-        pickPos(pos, player)  # Human's turn
+        pickPos(pos, player)  
 
     clear()
     printBoard()
