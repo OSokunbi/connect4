@@ -5,9 +5,7 @@ A simple implementation of the Connect-4 game in Python. Play against the comput
 ## Features
 
 - Play against the computer.
-- Implement a basic AI using the Minimax algorithm with Alpha-Beta pruning.
-- Block the opponent's winning moves.
-- Make strategic moves to win the game.
+- Implements a basic AI using the Minimax algorithm with Alpha-Beta pruning that blocks opponents winning move and makes strategic moves to win the game.
 ## How to Play
 
 1. Clone the repository:
